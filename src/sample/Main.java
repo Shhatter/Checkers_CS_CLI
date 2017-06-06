@@ -25,7 +25,7 @@ primaryStage.setTitle("Hello World");
         Parent root = mainControllerLoader.getRoot();
 
         primaryStage.setScene(new Scene(root));
-
+        int nic;
         primaryStage.show();
 
 
