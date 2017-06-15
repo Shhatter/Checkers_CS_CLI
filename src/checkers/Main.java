@@ -1,4 +1,4 @@
-package sample;
+package checkers;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +15,7 @@ public class Main extends Application {
 
 
         FXMLLoader mainControllerLoader = new FXMLLoader();
-        mainControllerLoader.setLocation(getClass().getResource("/sample/sample.fxml"));
+        mainControllerLoader.setLocation(getClass().getResource("/checkers/sample.fxml"));
         mainControllerLoader.load();
         Parent root = mainControllerLoader.getRoot();
 
