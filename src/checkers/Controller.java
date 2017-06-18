@@ -29,7 +29,7 @@ public class Controller implements Initializable
  public Button connectToServerButton;
  public GridPane checkerBoard;
  public javafx.scene.image.ImageView testImgView;
- public Dragboard dragBoard;
+
 
 public StackPane p00;
  public StackPane
@@ -43,16 +43,19 @@ public StackPane p00;
     ,field_70,	field_72	,field_74	,field_76;
     Image black = new Image("/images/black.jpg");
     Image white  = new Image("/images/white.jpg");
-    Image blackKing = new Image("/images/blackKing.png");;
-    Image whiteKing = new Image("/images/whiteKing.png");;
-
+    Image blackKing = new Image("/images/blackKing.png");
+    Image whiteKing = new Image("/images/whiteKing.png");
+    String playerID;
  ArrayList<StackPane> paneList = new ArrayList<StackPane>();
  ArrayList<FieldViewControl> fieldManager = new ArrayList<FieldViewControl>();
+ MoveTransfer [] sourceDestination = new MoveTransfer[2];
 
 
 
     public void initialize(URL location, ResourceBundle resources) {
 
+        sourceDestination[0] = new MoveTransfer();
+        sourceDestination[1] = new MoveTransfer();
 
 
         paneList.addAll(Arrays.asList(
@@ -104,57 +107,63 @@ holder+=4;
 
 
         //region White - Top
-        insertImage(white,new ImageView(),0,1);
-        insertImage(white,new ImageView(),0,3);
-        insertImage(white,new ImageView(),0,5);
-        insertImage(white,new ImageView(),0,7);
+        insertImage(white,new ImageView(),0,1,PawnColor.WHITE);
+        insertImage(white,new ImageView(),0,3,PawnColor.WHITE);
+        insertImage(white,new ImageView(),0,5,PawnColor.WHITE);
+        insertImage(white,new ImageView(),0,7,PawnColor.WHITE);
 
-        insertImage(white,new ImageView(),1,0);
-        insertImage(white,new ImageView(),1,2);
-        insertImage(white,new ImageView(),1,4);
-        insertImage(white,new ImageView(),1,6);
+        insertImage(white,new ImageView(),1,0,PawnColor.WHITE);
+        insertImage(white,new ImageView(),1,2,PawnColor.WHITE);
+        insertImage(white,new ImageView(),1,4,PawnColor.WHITE);
+        insertImage(white,new ImageView(),1,6,PawnColor.WHITE);
 
-        insertImage(white,new ImageView(),2,1);
-        insertImage(white,new ImageView(),2,3);
-        insertImage(white,new ImageView(),2,5);
-        insertImage(white,new ImageView(),2,7);
+        insertImage(white,new ImageView(),2,1,PawnColor.WHITE);
+        insertImage(white,new ImageView(),2,3,PawnColor.WHITE);
+        insertImage(white,new ImageView(),2,5,PawnColor.WHITE);
+        insertImage(white,new ImageView(),2,7,PawnColor.WHITE);
 
         //endregion
         //region Black
 
-        insertImage(black,new ImageView(),5,0);
-        insertImage(black,new ImageView(),5,2);
-        insertImage(black,new ImageView(),5,4);
-        insertImage(black,new ImageView(),5,6);
+        insertImage(black,new ImageView(),5,0,PawnColor.BLACK);
+        insertImage(black,new ImageView(),5,2,PawnColor.BLACK);
+        insertImage(black,new ImageView(),5,4,PawnColor.BLACK);
+        insertImage(black,new ImageView(),5,6,PawnColor.BLACK);
 
-        insertImage(black,new ImageView(),6,1);
-        insertImage(black,new ImageView(),6,3);
-        insertImage(black,new ImageView(),6,5);
-        insertImage(black,new ImageView(),6,7);
+        insertImage(black,new ImageView(),6,1,PawnColor.BLACK);
+        insertImage(black,new ImageView(),6,3,PawnColor.BLACK);
+        insertImage(black,new ImageView(),6,5,PawnColor.BLACK);
+        insertImage(black,new ImageView(),6,7,PawnColor.BLACK);
 
 
-        insertImage(black,new ImageView(),7,0);
-        insertImage(black,new ImageView(),7,2);
-        insertImage(black,new ImageView(),7,4);
-        insertImage(black,new ImageView(),7,6);
+        insertImage(black,new ImageView(),7,0,PawnColor.BLACK);
+        insertImage(black,new ImageView(),7,2,PawnColor.BLACK);
+        insertImage(black,new ImageView(),7,4,PawnColor.BLACK);
+        insertImage(black,new ImageView(),7,6,PawnColor.BLACK);
         //endregion
 
         //region blank initial fields
 
-        insertImage(null,new ImageView(),3,0);
-        insertImage(null,new ImageView(),3,2);
-        insertImage(null,new ImageView(),3,4);
-        insertImage(null,new ImageView(),3,6);
+        insertImage(null,new ImageView(),3,0,PawnColor.NONE);
+        insertImage(null,new ImageView(),3,2,PawnColor.NONE);
+        insertImage(null,new ImageView(),3,4,PawnColor.NONE);
+        insertImage(null,new ImageView(),3,6,PawnColor.NONE);
         
         
-        insertImage(null,new ImageView(),4,1);
-        insertImage(null,new ImageView(),4,3);
-        insertImage(null,new ImageView(),4,5);
-        insertImage(null,new ImageView(),4,7);
+        insertImage(null,new ImageView(),4,1,PawnColor.NONE);
+        insertImage(null,new ImageView(),4,3,PawnColor.NONE);
+        insertImage(null,new ImageView(),4,5,PawnColor.NONE);
+        insertImage(null,new ImageView(),4,7,PawnColor.NONE);
 
 
+        for (FieldViewControl x: fieldManager)
+        {
+            setupGestureSource(x);
+            setupGestureTarget(x);
 
-        //endregion
+        }
+
+
 
     }
 
@@ -181,42 +190,96 @@ holder+=4;
     }
 
 
-    void insertImage(Image image,ImageView inImageView,int  n,int m)
+    void insertImage(Image image,ImageView inImageView,int  n,int m,PawnColor pwnColor)
     {
 
 
         int index = retrunFieldfromFieldManagerList (n,m);
 
         inImageView.setImage(image);
-//        inImageView.fitWidthProperty().bind(fieldManager.get(0).getGridField().widthProperty());
-//        inImageView.fitHeightProperty().bind(fieldManager.get(0).getGridField().heightProperty());
         inImageView.setFitHeight(30);
         inImageView.setFitWidth(30);
         inImageView.setPreserveRatio(true);
 
-
         fieldManager.get(index).setViewedImage(inImageView);
         fieldManager.get(index).getGridField().getChildren().add(inImageView);
-        setupGestureSource(inImageView);
-        setupGestureTarget (fieldManager.get(index).getGridField(),inImageView);
-        //checkerBoard.add(inImageView,m,n);
+        fieldManager.get(index).setPawnColor(pwnColor);
+
 
 
 
     }
 
+    /*
+      Gesture management !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    */
+    void setupGestureSource(final FieldViewControl source)
+    {
+        source.getViewedImage().setOnDragDetected(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                Dragboard dragBoard = source.getViewedImage().startDragAndDrop(TransferMode.MOVE);
 
-void setupGestureTarget (final StackPane target,final ImageView targetImage)
+                ClipboardContent content = new ClipboardContent();
+                Image sourceImage = source.getViewedImage().getImage();
+
+
+                content.putImage(sourceImage);
+                dragBoard.setContent(content);
+                source.getGridField().getChildren().removeAll();
+//                pawnInitialField(source.getN(),source.getM(),source.getPawnColor(),playerID);
+                sourceDestination[0].setAllData(source.getN(),source.getM(),source.getPawnColor(),playerID);
+
+
+
+                event.consume();
+
+            }
+        });
+
+
+        source.getViewedImage().setOnDragDone(new EventHandler<DragEvent>()
+        {
+            @Override
+            public void handle(DragEvent event)
+            {
+                if (event.getTransferMode() == TransferMode.MOVE)
+                {
+                    source.getViewedImage().setImage(null);
+                    source.setPawnColor(PawnColor.NONE);
+
+                }
+                event.consume();
+            }
+        });
+
+        source.getViewedImage().setOnMouseEntered(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                source.getViewedImage().setCursor(Cursor.HAND);
+            }
+        });
+
+
+    }
+
+
+
+    void setupGestureTarget (final FieldViewControl target)
 {
 
-    target.setOnDragOver(new EventHandler<DragEvent>()
+    target.getGridField().setOnDragOver(new EventHandler<DragEvent>()
     {
         @Override
         public void handle(DragEvent event)
         {
-            dragBoard = event.getDragboard();
+            Dragboard dragBoard = event.getDragboard();
 
-            if (dragBoard.hasImage() && event.getGestureTarget()!=target)
+            if (dragBoard.hasImage())
             {
 
                 event.acceptTransferModes(TransferMode.MOVE);
@@ -226,16 +289,29 @@ void setupGestureTarget (final StackPane target,final ImageView targetImage)
     });
 
 
-    target.setOnDragDropped(new EventHandler<DragEvent>()
+    target.getGridField().setOnDragDropped(new EventHandler<DragEvent>()
     {
         @Override
         public void handle(DragEvent event)
         {
-            dragBoard = event.getDragboard();
-            if (dragBoard.hasImage() &&event.getGestureTarget()!=target)
+            Dragboard dragBoard = event.getDragboard();
+            if (dragBoard.hasImage() && target.getPawnColor() ==PawnColor.NONE)
             {
-                target.getChildren().remove(targetImage);
-                target.getChildren().add(new ImageView());
+
+//                pawnDestinationField(target.getN(),target.getM(),target.getPawnColor(),playerID);
+                sourceDestination[1].setAllData(target.getN(),target.getM(),target.getPawnColor(),playerID);
+
+            target.getViewedImage().setImage(dragBoard.getImage());
+
+            target.getGridField().getChildren().removeAll();
+
+
+
+/*               // ((FieldViewControl) event.getGestureSource())
+                target.getGridField().getChildren().removeAll();
+                target.getGridField().getChildren().add(new ImageView());
+                ;*/
+
                 event.setDropCompleted(true);
             }
             else
@@ -250,46 +326,20 @@ void setupGestureTarget (final StackPane target,final ImageView targetImage)
 }
 
 
-void setupGestureSource(final ImageView inImageView)
-    {
-        inImageView.setOnDragDetected(new EventHandler<MouseEvent>()
-        {
-            @Override
-            public void handle(MouseEvent event)
-            {
-                dragBoard = inImageView.startDragAndDrop(TransferMode.MOVE);
+    /*
+      Gesture management !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    */
 
-                ClipboardContent content = new ClipboardContent();
-                Image sourceImage = inImageView.getImage();
-
-                content.putImage(sourceImage);
-                dragBoard.setContent(content);
-
-                event.consume();
-
-            }
-        });
-
-        inImageView.setOnMouseEntered(new EventHandler<MouseEvent>()
-        {
-            @Override
-            public void handle(MouseEvent event)
-            {
-                inImageView.setCursor(Cursor.HAND);
-
-            }
-        });
-
-
-    }
-
-
-public void actualiseBySendDataToServer()
+/*public void pawnInitialField(int n,int m,PawnColor color,String owner)
 {
 
-
-
 }
+public void pawnDestinationField(int n,int m,PawnColor color,String owner)
+{
+
+}*/
+
+
 int retrunFieldfromFieldManagerList (int n,int m)
 {
 
@@ -303,6 +353,7 @@ int retrunFieldfromFieldManagerList (int n,int m)
         }
     return 99999;
 }
+
 
 
 
