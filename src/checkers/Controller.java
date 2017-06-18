@@ -216,7 +216,7 @@ void setupGestureTarget (final StackPane target,final ImageView targetImage)
         {
             dragBoard = event.getDragboard();
 
-            if (dragBoard.hasImage())
+            if (dragBoard.hasImage() && event.getGestureTarget()!=target)
             {
 
                 event.acceptTransferModes(TransferMode.MOVE);
@@ -232,7 +232,7 @@ void setupGestureTarget (final StackPane target,final ImageView targetImage)
         public void handle(DragEvent event)
         {
             dragBoard = event.getDragboard();
-            if (dragBoard.hasImage())
+            if (dragBoard.hasImage() &&event.getGestureTarget()!=target)
             {
                 target.getChildren().remove(targetImage);
                 target.getChildren().add(new ImageView());
@@ -284,20 +284,12 @@ void setupGestureSource(final ImageView inImageView)
     }
 
 
-
 public void actualiseBySendDataToServer()
 {
 
 
 
 }
-
-
-
-
-
-
-
 int retrunFieldfromFieldManagerList (int n,int m)
 {
 
