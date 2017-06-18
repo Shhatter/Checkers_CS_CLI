@@ -45,13 +45,13 @@
             <HBox alignment="CENTER" prefHeight="36.0" prefWidth="146.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Port: " />
-                  <TextField alignment="TOP_LEFT" prefHeight="25.0" prefWidth="85.0" />
+                  <TextField alignment="CENTER" prefHeight="25.0" prefWidth="85.0" text="5555" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="30.0" prefWidth="166.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="IP: " />
-                  <TextField prefHeight="25.0" prefWidth="136.0" />
+                  <TextField alignment="CENTER" prefHeight="25.0" prefWidth="136.0" text="127.0.0.1" />
                </children>
             </HBox>
             <Button fx:id="connectToServerButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#searchForServer" prefHeight="78.0" prefWidth="135.0" text="Połącz do serwera" textAlignment="CENTER">
