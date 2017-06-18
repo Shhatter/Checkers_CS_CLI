@@ -1,10 +1,13 @@
 package checkers;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
@@ -26,6 +29,7 @@ public class Controller implements Initializable
  public Button connectToServerButton;
  public GridPane checkerBoard;
  public javafx.scene.image.ImageView testImgView;
+ public Dragboard dragBoard;
 
 public StackPane p00;
  public StackPane
@@ -39,8 +43,8 @@ public StackPane p00;
     ,field_70,	field_72	,field_74	,field_76;
     Image black = new Image("/images/black.jpg");
     Image white  = new Image("/images/white.jpg");
-    Image blackKing;
-    Image whiteKing;
+    Image blackKing = new Image("/images/blackKing.png");;
+    Image whiteKing = new Image("/images/whiteKing.png");;
 
  ArrayList<StackPane> paneList = new ArrayList<StackPane>();
  ArrayList<FieldViewControl> fieldManager = new ArrayList<FieldViewControl>();
@@ -48,6 +52,8 @@ public StackPane p00;
 
 
     public void initialize(URL location, ResourceBundle resources) {
+
+
 
         paneList.addAll(Arrays.asList(
                 field_01	,field_03	,field_05	,field_07
@@ -95,6 +101,9 @@ holder+=4;
 //        clientBoard.add(new ImageView(black),3,3);
         //fieldManager.get(0).getGridField().getChildren().add(testImgView);
         //checkerBoard.add(testImgView,0,0);
+
+
+        //region White - Top
         insertImage(white,new ImageView(),0,1);
         insertImage(white,new ImageView(),0,3);
         insertImage(white,new ImageView(),0,5);
@@ -110,12 +119,13 @@ holder+=4;
         insertImage(white,new ImageView(),2,5);
         insertImage(white,new ImageView(),2,7);
 
+        //endregion
+        //region Black
 
         insertImage(black,new ImageView(),5,0);
         insertImage(black,new ImageView(),5,2);
         insertImage(black,new ImageView(),5,4);
         insertImage(black,new ImageView(),5,6);
-
 
         insertImage(black,new ImageView(),6,1);
         insertImage(black,new ImageView(),6,3);
@@ -127,7 +137,24 @@ holder+=4;
         insertImage(black,new ImageView(),7,2);
         insertImage(black,new ImageView(),7,4);
         insertImage(black,new ImageView(),7,6);
+        //endregion
 
+        //region blank initial fields
+
+        insertImage(null,new ImageView(),3,0);
+        insertImage(null,new ImageView(),3,2);
+        insertImage(null,new ImageView(),3,4);
+        insertImage(null,new ImageView(),3,6);
+        
+        
+        insertImage(null,new ImageView(),4,1);
+        insertImage(null,new ImageView(),4,3);
+        insertImage(null,new ImageView(),4,5);
+        insertImage(null,new ImageView(),4,7);
+
+
+
+        //endregion
 
     }
 
@@ -167,10 +194,11 @@ holder+=4;
         inImageView.setFitWidth(30);
         inImageView.setPreserveRatio(true);
 
-        /*setupGestureSource(inImageView);*/
+
         fieldManager.get(index).setViewedImage(inImageView);
         fieldManager.get(index).getGridField().getChildren().add(inImageView);
-
+        setupGestureSource(inImageView);
+        setupGestureTarget (fieldManager.get(index).getGridField(),inImageView);
         //checkerBoard.add(inImageView,m,n);
 
 
@@ -178,10 +206,97 @@ holder+=4;
     }
 
 
-void initialBoardFill ()
+void setupGestureTarget (final StackPane target,final ImageView targetImage)
 {
 
+    target.setOnDragOver(new EventHandler<DragEvent>()
+    {
+        @Override
+        public void handle(DragEvent event)
+        {
+            dragBoard = event.getDragboard();
+
+            if (dragBoard.hasImage())
+            {
+
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+            event.consume();
+        }
+    });
+
+
+    target.setOnDragDropped(new EventHandler<DragEvent>()
+    {
+        @Override
+        public void handle(DragEvent event)
+        {
+            dragBoard = event.getDragboard();
+            if (dragBoard.hasImage())
+            {
+                target.getChildren().remove(targetImage);
+                target.getChildren().add(new ImageView());
+                event.setDropCompleted(true);
+            }
+            else
+            {
+                event.setDropCompleted(false);
+            }
+    event.consume();
+
+        }
+    });
+
 }
+
+
+void setupGestureSource(final ImageView inImageView)
+    {
+        inImageView.setOnDragDetected(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                dragBoard = inImageView.startDragAndDrop(TransferMode.MOVE);
+
+                ClipboardContent content = new ClipboardContent();
+                Image sourceImage = inImageView.getImage();
+
+                content.putImage(sourceImage);
+                dragBoard.setContent(content);
+
+                event.consume();
+
+            }
+        });
+
+        inImageView.setOnMouseEntered(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                inImageView.setCursor(Cursor.HAND);
+
+            }
+        });
+
+
+    }
+
+
+
+public void actualiseBySendDataToServer()
+{
+
+
+
+}
+
+
+
+
+
+
 
 int retrunFieldfromFieldManagerList (int n,int m)
 {
