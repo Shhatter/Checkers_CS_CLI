@@ -29,6 +29,7 @@ public class Controller implements Initializable
  public Button connectToServerButton;
  public GridPane checkerBoard;
  public javafx.scene.image.ImageView testImgView;
+ public CommProtocol commProtocol = new CommProtocol();
 
 
 public StackPane p00;
@@ -44,7 +45,7 @@ public StackPane p00;
     Image black = new Image("/images/black.jpg");
     Image white  = new Image("/images/white.jpg");
     Image blackKing = new Image("/images/blackKing.png");
-    Image whiteKing = new Image("/images/whiteKing.png");
+    Image whiteKing = new Image("/images/whiteKing.png/");
     String playerID;
  ArrayList<StackPane> paneList = new ArrayList<StackPane>();
  ArrayList<FieldViewControl> fieldManager = new ArrayList<FieldViewControl>();
@@ -174,13 +175,12 @@ holder+=4;
         try {
             Socket checkerSocket = new Socket("127.0.0.1",5555);
             PrintWriter out = new PrintWriter(checkerSocket.getOutputStream(),true);
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader((checkerSocket.getInputStream())));
+            BufferedReader in = new BufferedReader(new InputStreamReader((checkerSocket.getInputStream())));
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Connection monitor");
             alert.setHeaderText("Status");
-            alert.setContentText("Server unavaiable");
+            alert.setContentText("Server unavailable");
 
             alert.showAndWait();
 
@@ -325,7 +325,6 @@ holder+=4;
 
 }
 
-
     /*
       Gesture management !!!!!!!!!!!!!!!!!!!!!!!!!!!!
     */
@@ -352,6 +351,15 @@ int retrunFieldfromFieldManagerList (int n,int m)
             }
         }
     return 99999;
+}
+
+
+
+void blockAllControlsOnEnemyMove()
+{
+
+
+
 }
 
 
