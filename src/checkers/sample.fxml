@@ -40,6 +40,9 @@
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Wynik:" />
                      </children>
                   </HBox>
+                  <Button mnemonicParsing="false" text="Start" />
+                  <Button mnemonicParsing="false" text="Zrezygnuj" />
+                  <Button mnemonicParsing="false" text="Zakończ połączenie" />
                </children>
             </VBox>
             <HBox alignment="CENTER" prefHeight="36.0" prefWidth="146.0">

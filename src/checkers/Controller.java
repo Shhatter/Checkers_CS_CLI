@@ -1,4 +1,5 @@
 package checkers;
+import checkers.enums.PawnColor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,10 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,10 +27,12 @@ public class Controller implements Initializable
  public Button connectToServerButton;
  public GridPane checkerBoard;
  public javafx.scene.image.ImageView testImgView;
- public CommProtocol commProtocol = new CommProtocol();
+ public NetworkConnection networkConnection = new NetworkConnection();
 
 
-public StackPane p00;
+    public ObjectOutputStream out;
+    public ObjectInputStream in;
+
  public StackPane
          field_01	,field_03	,field_05	,field_07
     ,field_10,	field_12	,field_14	,field_16
@@ -76,7 +76,7 @@ int holder = 0;
         {
             if(i%2==0)
             {
-                fieldManager.add(new FieldViewControl(paneList.get(holder),i,1,PawnColor.NONE));
+                fieldManager.add(new FieldViewControl(paneList.get(holder),i,1, PawnColor.NONE));
                 fieldManager.add(new FieldViewControl(paneList.get(holder+1),i,3,PawnColor.NONE));
                 fieldManager.add(new FieldViewControl(paneList.get(holder+2),i,5,PawnColor.NONE));
                 fieldManager.add(new FieldViewControl(paneList.get(holder+3),i,7,PawnColor.NONE));
@@ -172,10 +172,24 @@ holder+=4;
     public void searchForServer(ActionEvent event) throws IOException
     {
 
+        /*
+        String fromServer;
+        String fromUser;
+
+
+
+
         try {
             Socket checkerSocket = new Socket("127.0.0.1",5555);
             PrintWriter out = new PrintWriter(checkerSocket.getOutputStream(),true);
             BufferedReader in = new BufferedReader(new InputStreamReader((checkerSocket.getInputStream())));
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Connection monitor");
+            alert.setHeaderText("Status");
+            alert.setContentText("Connected!!!");
+
+            alert.showAndWait();
+
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Connection monitor");
@@ -185,8 +199,28 @@ holder+=4;
             alert.showAndWait();
 
         }
+*/
 
+        try
+        {
+//            Socket clientSocket = new Socket("127.0.0.1",5555);
+            networkConnection.startConnection();
 
+        }
+        catch (IOException e)
+        {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Connection monitor");
+            alert.setHeaderText("Status");
+            alert.setContentText("Connection problem!");
+
+            alert.showAndWait();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        connectToServerButton.setDisable (true);
     }
 
 

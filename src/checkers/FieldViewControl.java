@@ -1,5 +1,6 @@
 package checkers;
 
+import checkers.enums.PawnColor;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 

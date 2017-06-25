@@ -1,5 +1,7 @@
 package checkers;
 
+import checkers.enums.PawnColor;
+
 /**
  * Created by Praca on 2017-06-18.
  */
@@ -8,13 +10,15 @@ public class MoveTransfer
     int n,m;
     PawnColor color;
     String ownerID;
+    String order;
 
-    public MoveTransfer(int n, int m, PawnColor color, String ownerID)
+    public MoveTransfer(int n, int m, PawnColor color, String ownerID,String order)
     {
         this.n = n;
         this.m = m;
         this.color = color;
         this.ownerID = ownerID;
+        this.order = order;
     }
 
     public MoveTransfer()
