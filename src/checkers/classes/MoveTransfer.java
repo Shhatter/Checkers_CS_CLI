@@ -63,7 +63,21 @@ public class MoveTransfer implements Serializable,Cloneable
     }
 
 
+    public void showAllData()
+    {
+        System.out.println("***DATA FROM OUTPUTSTREAM***");
+        System.out.println(nDestination);
+        System.out.println(mDestination);
+        System.out.println(nStart);
+        System.out.println(mStart);
+        System.out.println(color);
+        System.out.println(ownerID);
+        System.out.println(order);
+        System.out.println(rightToMove);
+        System.out.println(playerSide);
+        System.out.println("********************");
 
+    }
 
 
 

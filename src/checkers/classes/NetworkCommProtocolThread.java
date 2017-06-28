@@ -66,6 +66,7 @@ public class NetworkCommProtocolThread extends Thread{
                 {
                     System.out.println("Before receiving ?");
                     tempMoveTranfer = (MoveTransfer) in.readObject();
+                    tempMoveTranfer.showAllData();
                    // System.out.println((String) in.readObject());
 
 
