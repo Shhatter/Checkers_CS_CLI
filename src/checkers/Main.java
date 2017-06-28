@@ -20,7 +20,6 @@ public class Main extends Application {
         Parent root = mainControllerLoader.getRoot();
 
         primaryStage.setScene(new Scene(root));
-        int nic;
         primaryStage.show();
 
 

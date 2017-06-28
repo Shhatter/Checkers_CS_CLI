@@ -1,19 +1,27 @@
 package checkers;
 
+import checkers.enums.MoveTransferOrder;
 import checkers.enums.PawnColor;
+import checkers.enums.PlayerSide;
+import java.io.Serializable;
+import java.lang.Cloneable;
+
+import static checkers.enums.PlayerSide.NOT_DECITED;
 
 /**
  * Created by Praca on 2017-06-18.
  */
-public class MoveTransfer
+public class MoveTransfer implements Serializable,Cloneable
 {
     int nStart,mStart,nDestination,mDestination;
     PawnColor color;
     String ownerID;
-    String order;
-    boolean systemEnabled;
+    MoveTransferOrder order;
+    boolean rightToMove;
+    PlayerSide playerSide;
 
-    public MoveTransfer(int nStart, int mStart,int nDestination,int mDestination, PawnColor color, String ownerID,String order,boolean systemEnabled)
+
+    public MoveTransfer(int nStart, int mStart,int nDestination,int mDestination, PawnColor color, String ownerID,MoveTransferOrder order,boolean rightToMove,PlayerSide playerSide)
 
     {
         this.nDestination = nDestination;
@@ -23,8 +31,25 @@ public class MoveTransfer
         this.color = color;
         this.ownerID = ownerID;
         this.order = order;
-        this.systemEnabled = systemEnabled;
+        this.rightToMove = rightToMove;
+        this.playerSide = playerSide;
     }
+
+    public MoveTransfer(MoveTransfer moveT)
+    {
+
+        this.nDestination = moveT.getnDestination();
+        this.mDestination = moveT.getmDestination();
+        this.nStart = moveT.getnStart();
+        this.mStart = moveT.getmStart();
+        this.color = moveT.getColor();
+        this.ownerID = moveT.getOwnerID();
+        this.order = moveT.getOrder();
+        this.rightToMove = moveT.rightToMove;
+        this.playerSide = moveT.playerSide;
+
+    }
+
 
     public MoveTransfer() //9
     {
@@ -34,19 +59,16 @@ public class MoveTransfer
         this.mStart = 0;
         this.color = PawnColor.NONE;
         this.ownerID = "NONE";
-        this.order = "IDLE";
-        this.systemEnabled = true;
+        this.order = MoveTransferOrder.NO_ORDER;
+        this.rightToMove = false;
+        playerSide = PlayerSide.NOT_DECITED;
     }
 
-    public void setAllData(int n, int m, PawnColor color, String ownerID)
-    {
-        this.nStart = n;
-        this.mStart = m;
-        this.color = color;
-        this.ownerID = ownerID;
-        this.order = order;
-        this.systemEnabled = systemEnabled;
-    }
+
+
+
+
+
     public int getnStart() {
         return nStart;
     }
@@ -95,21 +117,25 @@ public class MoveTransfer
         this.ownerID = ownerID;
     }
 
-    public String getOrder() {
+    public MoveTransferOrder getOrder() {
         return order;
     }
 
-    public void setOrder(String order) {
+    public void setOrder(MoveTransferOrder order) {
         this.order = order;
     }
 
-    public boolean isSystemEnabled() {
-        return systemEnabled;
+    public boolean isRightToMove() {
+        return rightToMove;
     }
 
-    public void setSystemEnabled(boolean systemEnabled) {
-        this.systemEnabled = systemEnabled;
-    } //setters & getters
+    public void setRightToMove(boolean rightToMove) {
+        this.rightToMove = rightToMove;
+    }
+
+
+
+
 
 
 }

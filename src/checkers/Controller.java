@@ -24,14 +24,12 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable
 {
 
- public Button connectToServerButton;
+ public Button connectToServerButton,startGameButton;
  public GridPane checkerBoard;
  public javafx.scene.image.ImageView testImgView;
  public NetworkConnection networkConnection = new NetworkConnection();
+ public Socket clientSocket;
 
-
-    public ObjectOutputStream out;
-    public ObjectInputStream in;
 
  public StackPane
          field_01	,field_03	,field_05	,field_07
@@ -47,6 +45,7 @@ public class Controller implements Initializable
     Image blackKing = new Image("/images/blackKing.png");
     Image whiteKing = new Image("/images/whiteKing.png/");
     String playerID;
+
  ArrayList<StackPane> paneList = new ArrayList<StackPane>();
  ArrayList<FieldViewControl> fieldManager = new ArrayList<FieldViewControl>();
  MoveTransfer [] sourceDestination = new MoveTransfer[2];
@@ -203,8 +202,8 @@ holder+=4;
 
         try
         {
-//            Socket clientSocket = new Socket("127.0.0.1",5555);
-            networkConnection.startConnection();
+            clientSocket = new Socket("127.0.0.1",5555) ;
+            networkConnection.startConnection(clientSocket);
 
         }
         catch (IOException e)
@@ -221,7 +220,20 @@ holder+=4;
         }
 
         connectToServerButton.setDisable (true);
+        startGameButton.setDisable(false);
     }
+
+    @FXML
+    public void startGame(ActionEvent event)throws Exception
+    {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Gane status");
+        alert.setHeaderText("Status");
+        alert.setContentText("User want to play");
+
+        alert.showAndWait();
+    }
+
 
 
     void insertImage(Image image,ImageView inImageView,int  n,int m,PawnColor pwnColor)
@@ -264,7 +276,7 @@ holder+=4;
                 dragBoard.setContent(content);
                 source.getGridField().getChildren().removeAll();
 //                pawnInitialField(source.getN(),source.getM(),source.getPawnColor(),playerID);
-                sourceDestination[0].setAllData(source.getN(),source.getM(),source.getPawnColor(),playerID);
+                //sourceDestination[0].setAllData(source.getN(),source.getM(),source.getPawnColor(),playerID);
 
 
 
@@ -333,7 +345,7 @@ holder+=4;
             {
 
 //                pawnDestinationField(target.getN(),target.getM(),target.getPawnColor(),playerID);
-                sourceDestination[1].setAllData(target.getN(),target.getM(),target.getPawnColor(),playerID);
+                /////sourceDestination[1].setAllData(target.getN(),target.getM(),target.getPawnColor(),playerID);
 
             target.getViewedImage().setImage(dragBoard.getImage());
 
@@ -395,6 +407,7 @@ void blockAllControlsOnEnemyMove()
 
 
 }
+
 
 
 

@@ -1,6 +1,7 @@
 package checkers;
 
 import java.io.Serializable;
+import java.net.Socket;
 import java.util.function.Consumer;
 
 /**
@@ -9,23 +10,23 @@ import java.util.function.Consumer;
 public class NetworkConnection
 {
 
-    //public Consumer<Serializable> consumer;
     public NetworkCommProtocolThread networkCommProtocolThread = new NetworkCommProtocolThread();
 
     public NetworkConnection(Consumer<Serializable> consumer) {
-      //  this.consumer = consumer;
         networkCommProtocolThread.setDaemon(true);
     }
 
 
     public NetworkConnection()
     {
-        networkCommProtocolThread.setDaemon(true);
     }
 
 
-    public void startConnection () throws Exception
+    public void startConnection (Socket socket) throws Exception
     {
+        networkCommProtocolThread.setName("CONNECTION THREAD");
+        networkCommProtocolThread.socket = socket;
+        networkCommProtocolThread.setDaemon(true);
         networkCommProtocolThread.start();
     }
 
