@@ -1,4 +1,4 @@
-package checkers;
+package checkers.classes;
 
 import java.io.Serializable;
 import java.net.Socket;

@@ -1,17 +1,13 @@
-package checkers;
+package checkers.classes;
 
-
-
-import checkers.enums.PawnColor;
-import javafx.scene.control.Alert;
 
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.function.Consumer;
 
 /**
@@ -59,7 +55,7 @@ public class NetworkCommProtocolThread extends Thread{
 
             in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
-            //socket.setTcpNoDelay(true); // ???
+            socket.setTcpNoDelay(true); // ???
 
 
 
@@ -70,9 +66,13 @@ public class NetworkCommProtocolThread extends Thread{
                 {
                     System.out.println("Before receiving ?");
                     tempMoveTranfer = (MoveTransfer) in.readObject();
+                   // System.out.println((String) in.readObject());
 
-/*                    Serializable data = (Serializable) in.readObject();
-                    onReceiveCallback.accept(data);*/
+
+//
+//                    Serializable data = (Serializable) in.readObject();
+//                    onReceiveCallback.accept(data);
+//                    tempMoveTranfer = (MoveTransfer) onReceiveCallback;
 
                     System.out.println("After receiving");
                     if( tempMoveTranfer.equals(moveTransfer) )
@@ -99,10 +99,15 @@ public class NetworkCommProtocolThread extends Thread{
             }
 
         }
-        catch(Exception e)
-
+         catch (SocketException e)
         {
-
+            e.printStackTrace();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
         }
 
     }

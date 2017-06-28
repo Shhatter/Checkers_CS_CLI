@@ -1,4 +1,4 @@
-package checkers;
+package checkers.classes;
 import checkers.enums.PawnColor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

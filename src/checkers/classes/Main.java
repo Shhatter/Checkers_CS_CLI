@@ -1,4 +1,4 @@
-package checkers;
+package checkers.classes;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

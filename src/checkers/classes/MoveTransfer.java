@@ -1,12 +1,10 @@
-package checkers;
+package checkers.classes;
 
 import checkers.enums.MoveTransferOrder;
 import checkers.enums.PawnColor;
 import checkers.enums.PlayerSide;
 import java.io.Serializable;
 import java.lang.Cloneable;
-
-import static checkers.enums.PlayerSide.NOT_DECITED;
 
 /**
  * Created by Praca on 2017-06-18.

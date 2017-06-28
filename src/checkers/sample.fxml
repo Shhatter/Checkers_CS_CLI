@@ -13,7 +13,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 
-<BorderPane prefHeight="519.0" prefWidth="602.0" style="-fx-background-color: #C2F2D0;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="checkers.Controller">
+<BorderPane prefHeight="519.0" prefWidth="602.0" style="-fx-background-color: #C2F2D0;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="checkers.classes.Controller">
    <top>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="WARCABY" BorderPane.alignment="CENTER">
          <font>
