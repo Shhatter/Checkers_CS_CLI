@@ -5,10 +5,10 @@ package checkers.classes;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.function.Consumer;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
 
@@ -22,24 +22,16 @@ public class NetworkCommProtocolThread extends Thread{
     public Socket socket ;
     public ObjectOutputStream out;
     public ObjectInputStream in;
-    long  currentThreadID;
-    MoveTransfer moveTransfer = new MoveTransfer();
-    MoveTransfer tempMoveTranfer = new MoveTransfer();
-    private Consumer<Serializable> onReceiveCallback;
+    public long  currentThreadID;
+    public MoveTransfer moveTransfer = new MoveTransfer();
+    public  MoveTransfer tempMoveTranfer = new MoveTransfer();
+    //private Consumer<Serializable> onReceiveCallback;
+    public BlockingQueue<MoveTransfer> blockingQueue ;
 
 
-    boolean newDataToSend = false;
-    boolean newDataToReceive = true;
 
-    //public String [] commands = {"LOCK_LAYOUT","UNLOCK_LAYOUT","START_YOUR_MOVE","MOVE_ENDED","YOU_WIN","YOU_LOOSE"};
-
-//    public NetworkCommProtocolThread(Socket socket, String threadNumbner)
-//    {
-//
-//        super(threadNumbner);
-//        this.socket = socket;
-//        this.newDataToReceive = true;
-//    }
+    public boolean newDataToSend = false;
+    public boolean newDataToReceive = true;
 
 
 @Override
@@ -59,7 +51,6 @@ public class NetworkCommProtocolThread extends Thread{
 
 
 
-
             while(true)
             {
                 if(newDataToReceive == true)
@@ -67,35 +58,30 @@ public class NetworkCommProtocolThread extends Thread{
                     System.out.println("Before receiving ?");
                     tempMoveTranfer = (MoveTransfer) in.readObject();
                     tempMoveTranfer.showAllData();
-                   // System.out.println((String) in.readObject());
+                   // moveTransfer = new MoveTransfer(tempMoveTranfer);
 
 
-//
-//                    Serializable data = (Serializable) in.readObject();
-//                    onReceiveCallback.accept(data);
-//                    tempMoveTranfer = (MoveTransfer) onReceiveCallback;
 
-                    System.out.println("After receiving");
-                    if( tempMoveTranfer.equals(moveTransfer) )
+                    //if( tempMoveTranfer.equals(moveTransfer) )
+                    if(tempMoveTranfer.hashCode()==moveTransfer.hashCode())
                     {
                         System.out.println("Data are the same !");
+                        throw new IllegalAccessException("NOPE");
                     }
                     else
                     {
 
                         moveTransfer = new MoveTransfer(tempMoveTranfer) ;
-                        newDataToReceive = false;
+                        this.newDataToReceive = false;
+                        this.newDataToSend = true;
+                        blockingQueue.put( new MoveTransfer(moveTransfer));
+                        Thread.sleep(50);
                         System.out.println("First data received");
-
-
                     }
-
-
-
                 }
-                //else if(newDataToSend == true;)
 
 
+                Thread.sleep(100);
 
             }
 
@@ -109,6 +95,12 @@ public class NetworkCommProtocolThread extends Thread{
         } catch (ClassNotFoundException e)
         {
             e.printStackTrace();
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        } catch (IllegalAccessException e)
+        {
+            System.out.println("Data from output are the same !!!");
         }
 
     }

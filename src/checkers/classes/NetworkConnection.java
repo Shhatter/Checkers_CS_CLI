@@ -1,7 +1,9 @@
 package checkers.classes;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
 import java.util.function.Consumer;
 
 /**
@@ -22,17 +24,25 @@ public class NetworkConnection
     }
 
 
-    public void startConnection (Socket socket) throws Exception
+    public void startConnection (Socket socket, BlockingQueue<MoveTransfer> blockingDeque)
     {
         networkCommProtocolThread.setName("CONNECTION THREAD");
         networkCommProtocolThread.socket = socket;
         networkCommProtocolThread.setDaemon(true);
+        networkCommProtocolThread.blockingQueue = blockingDeque;
+
         networkCommProtocolThread.start();
     }
 
-    public void sendData(Serializable data) throws Exception
+    public void sendData(Serializable data)
     {
-        networkCommProtocolThread.out.writeObject(data);
+        try
+        {
+            networkCommProtocolThread.out.writeObject(data);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 //    public Consumer<Serializable> getData() throws Exception
 //    {

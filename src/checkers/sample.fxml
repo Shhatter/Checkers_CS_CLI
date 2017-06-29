@@ -27,12 +27,12 @@
    <right>
       <VBox alignment="CENTER" prefHeight="477.0" prefWidth="166.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox alignment="CENTER" prefHeight="293.0" prefWidth="166.0">
                <children>
                   <HBox prefHeight="18.0" prefWidth="166.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ruch: " />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ruch zawodnika " />
+                        <Text fx:id="playerMoveLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Ruch zawodnika " />
                      </children>
                   </HBox>
                   <HBox prefHeight="35.0" prefWidth="166.0">
@@ -40,21 +40,23 @@
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Wynik:" />
                      </children>
                   </HBox>
-                  <Button fx:id="startGameButton" disable="true" mnemonicParsing="false" onAction="#startGame" text="Start" />
-                  <Button mnemonicParsing="false" text="Zrezygnuj" />
-                  <Button mnemonicParsing="false" text="Zakończ połączenie" />
+                  <Button fx:id="startGameButton" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#startGame" text="Start" />
+                  <Separator orientation="VERTICAL" prefHeight="9.0" prefWidth="0.0" />
+                  <Button alignment="CENTER" mnemonicParsing="false" text="Zrezygnuj" />
+                  <Separator orientation="VERTICAL" prefHeight="9.0" prefWidth="0.0" />
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Zakończ połączenie" />
                </children>
             </VBox>
             <HBox alignment="CENTER" prefHeight="36.0" prefWidth="146.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Port: " />
-                  <TextField alignment="CENTER" prefHeight="25.0" prefWidth="85.0" text="5555" />
+                  <TextField fx:id="portTextField" alignment="CENTER" prefHeight="25.0" prefWidth="85.0" text="5555" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="30.0" prefWidth="166.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="IP: " />
-                  <TextField alignment="CENTER" prefHeight="25.0" prefWidth="83.0" text="127.0.0.1" />
+                  <TextField fx:id="ipTextField" alignment="CENTER" prefHeight="25.0" prefWidth="83.0" text="127.0.0.1" />
                </children>
             </HBox>
             <Button fx:id="connectToServerButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#searchForServer" prefHeight="78.0" prefWidth="135.0" text="Połącz do serwera" textAlignment="CENTER">

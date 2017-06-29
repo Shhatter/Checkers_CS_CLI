@@ -146,8 +146,48 @@ public class MoveTransfer implements Serializable,Cloneable
     }
 
 
+    public PlayerSide getPlayerSide()
+    {
+        return playerSide;
+    }
+
+    public void setPlayerSide(PlayerSide playerSide)
+    {
+        this.playerSide = playerSide;
+    }
 
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (!(o instanceof MoveTransfer)) return false;
 
+        MoveTransfer that = (MoveTransfer) o;
 
+        if (getnStart() != that.getnStart()) return false;
+        if (getmStart() != that.getmStart()) return false;
+        if (getnDestination() != that.getnDestination()) return false;
+        if (getmDestination() != that.getmDestination()) return false;
+        if (isRightToMove() != that.isRightToMove()) return false;
+        if (getColor() != that.getColor()) return false;
+        if (!getOwnerID().equals(that.getOwnerID())) return false;
+        if (getOrder() != that.getOrder()) return false;
+        return getPlayerSide() == that.getPlayerSide();
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = getnStart();
+        result = 31 * result + getmStart();
+        result = 31 * result + getnDestination();
+        result = 31 * result + getmDestination();
+        result = 31 * result + getColor().hashCode();
+        result = 31 * result + getOwnerID().hashCode();
+        result = 31 * result + getOrder().hashCode();
+        result = 31 * result + (isRightToMove() ? 1 : 0);
+        result = 31 * result + getPlayerSide().hashCode();
+        return result;
+    }
 }
