@@ -12,10 +12,13 @@ import java.util.function.Consumer;
 public class NetworkConnection
 {
 
-    public NetworkCommProtocolThread networkCommProtocolThread = new NetworkCommProtocolThread();
+    public MoveTransfer moveTransfer = new MoveTransfer();
+    public NetworkCommProtocolThread netComPortThcREAD = new NetworkCommProtocolThread(moveTransfer,true);
+    public NetworkCommProtocolThread netComPortThrWRITE = new NetworkCommProtocolThread(moveTransfer,false);
+
 
     public NetworkConnection(Consumer<Serializable> consumer) {
-        networkCommProtocolThread.setDaemon(true);
+        netComPortThcREAD.setDaemon(true);
     }
 
 
@@ -24,21 +27,33 @@ public class NetworkConnection
     }
 
 
-    public void startConnection (Socket socket, BlockingQueue<MoveTransfer> blockingDeque)
+    public void startConnection (Socket socket, BlockingQueue<MoveTransfer> blockingQueue)
     {
-        networkCommProtocolThread.setName("CONNECTION THREAD");
-        networkCommProtocolThread.socket = socket;
-        networkCommProtocolThread.setDaemon(true);
-        networkCommProtocolThread.blockingQueue = blockingDeque;
+        netComPortThcREAD.setName("RECEIVE THREAD ACTIVE ");
+        netComPortThcREAD.socket = socket;
+        netComPortThcREAD.setDaemon(true);
+        netComPortThcREAD.blockingQueue = blockingQueue;
 
-        networkCommProtocolThread.start();
+        netComPortThcREAD.start();
+
+
+        netComPortThrWRITE.setName("SEND THREAD ACTIVE ");
+        netComPortThrWRITE.socket = socket;
+        netComPortThrWRITE.setDaemon(true);
+        netComPortThrWRITE.blockingQueue = blockingQueue;
+
+        netComPortThrWRITE.start();
+        
+        
+        
+        
     }
 
     public void sendData(Serializable data)
     {
         try
         {
-            networkCommProtocolThread.out.writeObject(data);
+            netComPortThcREAD.out.writeObject(data);
         } catch (IOException e)
         {
             e.printStackTrace();

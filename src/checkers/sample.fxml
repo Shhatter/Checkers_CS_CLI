@@ -32,7 +32,7 @@
                   <HBox prefHeight="18.0" prefWidth="166.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ruch: " />
-                        <Text fx:id="playerMoveLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Ruch zawodnika " />
+                        <Text fx:id="playerMoveLabel" strokeType="OUTSIDE" strokeWidth="0.0" />
                      </children>
                   </HBox>
                   <HBox prefHeight="35.0" prefWidth="166.0">

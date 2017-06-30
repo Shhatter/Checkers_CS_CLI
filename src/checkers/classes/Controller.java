@@ -12,7 +12,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
-import sun.font.TextLabel;
+import javafx.scene.text.Text;
 
 import java.io.*;
 import java.net.Socket;
@@ -32,10 +32,9 @@ public class Controller implements Initializable
  public javafx.scene.image.ImageView testImgView;
  public NetworkConnection networkConnection = new NetworkConnection();
  public Socket clientSocket;
- public LinkedBlockingQueue queue;
  public BlockingQueue<MoveTransfer> blockingQueue = new LinkedBlockingQueue<MoveTransfer>();;
  public TextField portTextField, ipTextField;
- public TextLabel playerMoveLabel;
+ public Text playerMoveLabel;
 
 
 
@@ -53,11 +52,13 @@ public class Controller implements Initializable
 // FXML
 
 
-    Image black = new Image("/images/black.jpg");
-    Image white  = new Image("/images/white.jpg");
-    Image blackKing = new Image("/images/blackKing.png");
-    Image whiteKing = new Image("/images/whiteKing.png/");
-    String playerID;
+    public Image black = new Image("/images/black.jpg");
+    public Image white  = new Image("/images/white.jpg");
+    public Image blackKing = new Image("/images/blackKing.png");
+    public Image whiteKing = new Image("/images/whiteKing.png/");
+    public String playerID;
+    public Boolean rightToMove = false;
+    public PawnColor playerPawnColor= PawnColor.NONE;
 
  ArrayList<FieldViewControl> fieldManager = new ArrayList<FieldViewControl>();
  MoveTransfer moveTransferInController = new MoveTransfer();
@@ -197,7 +198,6 @@ public class Controller implements Initializable
 */
 
 
-
     }
 
     @FXML
@@ -206,28 +206,12 @@ public class Controller implements Initializable
         try
         {
             clientSocket = new Socket(ipTextField.getText(), Integer.parseInt(portTextField.getText())) ;
-
-//            clientSocket = new Socket(ipTextField.getText(), Integer.parseInt(ipTextField.getText())) ;
-         //   clientSocket = new Socket("127.0.0.1", Integer.parseInt(ipTextField.getText())) ;
-
             networkConnection.startConnection(clientSocket,blockingQueue);
-            //blockingQueue.take();
-
-//            moveTransferInController = new MoveTransfer(networkConnection.networkCommProtocolThread.moveTransfer);
-
-            System.out.println("Blocking queue send data");
-
-
-//            while (networkConnection.networkCommProtocolThread.moveTransfer.equals(moveTransferInController))
-//            {
-//         //       System.out.println("The object from server didn't change yet :/ ");
-//            }
-
 
         }
         catch  (NullPointerException e)
         {
-            System.out.println("pusty bufor !/");
+            System.out.println("Nothing on the input!/");
 
 
         }
@@ -254,36 +238,68 @@ public class Controller implements Initializable
     {
         try
         {
-            moveTransferInController = new MoveTransfer(networkConnection.networkCommProtocolThread.blockingQueue.take());
+            moveTransferInController = new MoveTransfer(networkConnection.netComPortThcREAD.blockingQueue.take());
         } catch (InterruptedException e)
         {
             e.printStackTrace();
         }
 
-        if(moveTransferInController.getColor() == PawnColor.WHITE)
+        rightToMove =  moveTransferInController.isRightToMove();
+        playerPawnColor = moveTransferInController.getColor();
+        if(playerPawnColor == PawnColor.WHITE)
         {
-            fillTheBoard(PawnColor.WHITE,white,PawnColor.BLACK,black);
+            fillTheBoard(PawnColor.BLACK,black,PawnColor.WHITE,white);
         }
         else
         {
 
-            fillTheBoard(PawnColor.BLACK,black,PawnColor.WHITE,white);
+            fillTheBoard(PawnColor.WHITE,white,PawnColor.BLACK,black);
 
         }
 
+        if(rightToMove == false)
+        {
+            playerMoveLabel.setText("Ruch przeciwnika");
+            for (FieldViewControl x: fieldManager)
+
+            {
+
+              setupGestreSourceOnEnemyMove(x);
+              setupGestureTargetOnEnemyMove(x);
+
+            }
+
+        }
+        else
+        {
+            for (int i = 0 ; i < fieldManager.size();i++)
+            {
+
+                if (fieldManager.get(i).getPawnColor() == playerPawnColor || fieldManager.get(i).getPawnColor() == PawnColor.NONE)
+                {
+                    setupGestureSource(fieldManager.get(i));
+                    setupGestureTarget(fieldManager.get(i));
+
+                }
+                else
+                {
+                    setupGestreSourceOnEnemyMove(fieldManager.get(i));
+                    setupGestureTargetOnEnemyMove(fieldManager.get(i));
+
+                }
+
+            }
+            playerMoveLabel.setText("Twój ruch");
+        }
 
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Gane status");
-        alert.setHeaderText("Status");
-        alert.setContentText("User want to play");
-
-        alert.showAndWait();
     }
 
     private void fillTheBoard(PawnColor top,Image imageTop,PawnColor bottom,Image imageBottom)
     {
 
+
+        
         insertImage(imageTop,new ImageView(),0,1,top);
         insertImage(imageTop,new ImageView(),0,3,top);
         insertImage(imageTop,new ImageView(),0,5,top);
@@ -333,12 +349,12 @@ public class Controller implements Initializable
         insertImage(null,new ImageView(),4,7,PawnColor.NONE);
 
 
-        for (FieldViewControl x: fieldManager)
-        {
-            setupGestureSource(x);
-            setupGestureTarget(x);
-
-        }
+//        for (FieldViewControl x: fieldManager)
+//        {
+//            setupGestureSource(x);
+//            setupGestureTarget(x);
+//
+//        }
     }
 
 
@@ -372,6 +388,8 @@ public class Controller implements Initializable
             @Override
             public void handle(MouseEvent event)
             {
+
+
                 Dragboard dragBoard = source.getViewedImage().startDragAndDrop(TransferMode.MOVE);
 
                 ClipboardContent content = new ClipboardContent();
@@ -381,7 +399,7 @@ public class Controller implements Initializable
                 content.putImage(sourceImage);
                 dragBoard.setContent(content);
                 source.getGridField().getChildren().removeAll();
-//                pawnInitialField(source.getN(),source.getM(),source.getPawnColor(),playerID);
+//               pawnInitialField(source.getN(),source.getM(),source.getPawnColor(),playerID);
                 //moveTransferInController[0].setAllData(source.getN(),source.getM(),source.getPawnColor(),playerID);
 
 
@@ -454,6 +472,7 @@ public class Controller implements Initializable
                 /////moveTransferInController[1].setAllData(target.getN(),target.getM(),target.getPawnColor(),playerID);
 
             target.getViewedImage().setImage(dragBoard.getImage());
+            target.setPawnColor(playerPawnColor);
 
             target.getGridField().getChildren().removeAll();
 
@@ -507,22 +526,147 @@ int retrunFieldfromFieldManagerList (int n,int m)
 
 
 
-void blockAllControlsOnEnemyMove()
-{
+
+    void setupGestreSourceOnEnemyMove(final FieldViewControl source)
+    {
+        source.getViewedImage().setOnDragDetected(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+
+
+                //Dragboard dragBoard = source.getViewedImage().startDragAndDrop(TransferMode.NONE);
+
+                //ClipboardContent content = new ClipboardContent();
+                //Image sourceImage = source.getViewedImage().getImage();
+
+
+                //content.putImage(sourceImage);
+                //dragBoard.setContent(content);
+                //source.getGridField().getChildren().removeAll();
+//               pawnInitialField(source.getN(),source.getM(),source.getPawnColor(),playerID);
+                //moveTransferInController[0].setAllData(source.getN(),source.getM(),source.getPawnColor(),playerID);
+
+
+
+                //event.consume();
+
+            }
+        });
+
+
+        source.getViewedImage().setOnDragDone(new EventHandler<DragEvent>()
+        {
+            @Override
+            public void handle(DragEvent event)
+            {
+                /*
+                if (event.getTransferMode() == TransferMode.MOVE)
+                {
+                    source.getViewedImage().setImage(null);
+                    source.setPawnColor(PawnColor.NONE);
+
+                }
+                event.consume();*/
+            }
+        });
+
+        source.getViewedImage().setOnMouseEntered(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                source.getViewedImage().setCursor(Cursor.WAIT);
+            }
+        });
+
+
+    }
+
+
+
+
+    void setupGestureTargetOnEnemyMove (final FieldViewControl target)
+    {
+
+        target.getGridField().setOnDragOver(new EventHandler<DragEvent>()
+        {
+            @Override
+            public void handle(DragEvent event)
+            {
+//                Dragboard dragBoard = event.getDragboard();
+//
+//                if (dragBoard.hasImage())
+//                {
+//
+//                    event.acceptTransferModes(TransferMode.MOVE);
+//                }
+//                event.consume();
+            }
+        });
+
+
+        target.getGridField().setOnDragDropped(new EventHandler<DragEvent>()
+        {
+            @Override
+            public void handle(DragEvent event)
+            {
+//                Dragboard dragBoard = event.getDragboard();
+//                if (dragBoard.hasImage() && target.getPawnColor() ==PawnColor.NONE)
+//                {
+//
+////                pawnDestinationField(target.getN(),target.getM(),target.getPawnColor(),playerID);
+//                    /////moveTransferInController[1].setAllData(target.getN(),target.getM(),target.getPawnColor(),playerID);
+//
+//                    target.getViewedImage().setImage(dragBoard.getImage());
+//
+//                    target.getGridField().getChildren().removeAll();
+//
+//
+//
+///*               // ((FieldViewControl) event.getGestureSource())
+//                target.getGridField().getChildren().removeAll();
+//                target.getGridField().getChildren().add(new ImageView());
+//                ;*/
+//
+//                    event.setDropCompleted(true);
+//                }
+//                else
+//                {
+//                    event.setDropCompleted(false);
+//                }
+ //               event.consume();
+
+            }
+        });
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 }
 
-public void setUpInitialPawnLocation(MoveTransfer moveTransfer)
-{
-    
-    
-
-}
 
 
-
-
-
-}
