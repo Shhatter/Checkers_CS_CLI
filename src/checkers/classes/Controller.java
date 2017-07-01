@@ -207,6 +207,8 @@ public class Controller implements Initializable
         {
             clientSocket = new Socket(ipTextField.getText(), Integer.parseInt(portTextField.getText())) ;
             networkConnection.startConnection(clientSocket,blockingQueue);
+            connectToServerButton.setDisable (true);
+            startGameButton.setDisable(false);
 
         }
         catch  (NullPointerException e)
@@ -229,8 +231,7 @@ public class Controller implements Initializable
             e.printStackTrace();
         }
 
-        connectToServerButton.setDisable (true);
-        startGameButton.setDisable(false);
+
     }
 
     @FXML
