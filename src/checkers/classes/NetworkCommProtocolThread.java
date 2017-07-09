@@ -1,7 +1,6 @@
 package checkers.classes;
 
 
-
 import checkers.enums.MoveTransferOrder;
 
 import java.io.IOException;
@@ -13,30 +12,27 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
-
-
-
  * Created by Praca on 2017-06-18.
  */
-public class NetworkCommProtocolThread extends Thread{
+public class NetworkCommProtocolThread extends Thread
+{
 
 
-    public boolean isReader ;
-    public Socket socket ;
+    public boolean isReader;
+    public Socket socket;
     public ObjectOutputStream out;
     public ObjectInputStream in;
-    public long  currentThreadID;
-    public MoveTransfer moveTransfer ;
-    public  MoveTransfer tempMoveTranfer = new MoveTransfer();
+    public long currentThreadID;
+    public MoveTransfer moveTransfer;
+    public MoveTransfer tempMoveTranfer = new MoveTransfer();
     //private Consumer<Serializable> onReceiveCallback;
-    public BlockingQueue<MoveTransfer> blockingQueue ;
-
+    public BlockingQueue<MoveTransfer> blockingQueue;
 
 
     public boolean newDataToSend = false;
     public boolean newDataToReceive = true;
 
-    public NetworkCommProtocolThread(MoveTransfer moveTransfer,boolean isReader)
+    public NetworkCommProtocolThread(MoveTransfer moveTransfer, boolean isReader)
 
     {
         this.isReader = isReader;
@@ -48,24 +44,22 @@ public class NetworkCommProtocolThread extends Thread{
     public void run()
     {
 
-        if(isReader)
+        if (isReader)
         {
             currentThreadID = Thread.currentThread().getId();
-            System.out.println("Read Thread ID: "+currentThreadID + " is working");
+            System.out.println("Read Thread ID: " + currentThreadID + " is working");
 
             try
             {
-
 
 
                 in = new ObjectInputStream(socket.getInputStream());
                 socket.setTcpNoDelay(true); // ???
 
 
-
-                while(moveTransfer.getOrder()!= MoveTransferOrder.END_OF_GAME.END_OF_GAME)
+                while (moveTransfer.getOrder() != MoveTransferOrder.END_OF_GAME)
                 {
-                    if(newDataToReceive == true)
+                    if (newDataToReceive == true)
                     {
                         System.out.println("Before receiving ?");
                         tempMoveTranfer = (MoveTransfer) in.readObject();
@@ -73,20 +67,18 @@ public class NetworkCommProtocolThread extends Thread{
                         // moveTransfer = new MoveTransfer(tempMoveTranfer);
 
 
-
                         //if( tempMoveTranfer.equals(moveTransfer) )
-                        if(tempMoveTranfer.hashCode()==moveTransfer.hashCode())
+                        if (tempMoveTranfer.hashCode() == moveTransfer.hashCode())
                         {
                             System.out.println("Data are the same !");
                             throw new IllegalAccessException("NOPE");
-                        }
-                        else
+                        } else
                         {
 
-                            moveTransfer = new MoveTransfer(tempMoveTranfer) ;
+                            moveTransfer = new MoveTransfer(tempMoveTranfer);
                             this.newDataToReceive = false;
                             this.newDataToSend = true;
-                            blockingQueue.put( new MoveTransfer(moveTransfer));
+                            blockingQueue.put(new MoveTransfer(moveTransfer));
 //                            Thread.sleep(50);
                             System.out.println("First data received");
                         }
@@ -97,8 +89,7 @@ public class NetworkCommProtocolThread extends Thread{
 
                 }
 
-            }
-            catch (SocketException e)
+            } catch (SocketException e)
             {
                 e.printStackTrace();
             } catch (IOException e)
@@ -113,11 +104,10 @@ public class NetworkCommProtocolThread extends Thread{
             } catch (IllegalAccessException e)
             {
                 System.out.println("Data from output are the same !!!");
-            }
-            finally
+            } finally
             {
                 currentThreadID = Thread.currentThread().getId();
-                System.out.println("Read Thread ID: "+currentThreadID + "Completed it work");
+                System.out.println("Read Thread ID: " + currentThreadID + "Completed it work");
                 try
                 {
                     socket.close();
@@ -127,27 +117,26 @@ public class NetworkCommProtocolThread extends Thread{
                 }
             }
 
-        }
-        else
+        } else
         {
             currentThreadID = Thread.currentThread().getId();
-            System.out.println("Write Thread ID: "+currentThreadID + " is working");
+            System.out.println("Write Thread ID: " + currentThreadID + " is working");
             try
             {
                 out = new ObjectOutputStream(socket.getOutputStream());
                 socket.setTcpNoDelay(true); //może się przyda - może nie.
 
 
-                while(moveTransfer.getOrder()!= MoveTransferOrder.END_OF_GAME.END_OF_GAME)
+                while (moveTransfer.getOrder() != MoveTransferOrder.END_OF_GAME.END_OF_GAME)
                 {
-                    if(newDataToSend == true)
+                    if (newDataToSend == true)
                     {
 
                         out.reset();
                         out.writeObject(moveTransfer);
                         out.flush();
                         newDataToSend = false;
-                        System.out.println("Data from thread " +currentThreadID + " has been sent");
+                        System.out.println("Data from thread " + currentThreadID + " has been sent");
 
 
                     }
@@ -163,11 +152,10 @@ public class NetworkCommProtocolThread extends Thread{
             } catch (InterruptedException e)
             {
                 e.printStackTrace();
-            }
-            finally
+            } finally
             {
                 currentThreadID = Thread.currentThread().getId();
-                System.out.println("Write Thread ID: "+currentThreadID + "Completed it work");
+                System.out.println("Write Thread ID: " + currentThreadID + "Completed it work");
                 try
                 {
                     socket.close();

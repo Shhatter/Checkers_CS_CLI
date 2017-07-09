@@ -13,11 +13,12 @@ public class NetworkConnection
 {
 
     public MoveTransfer moveTransfer = new MoveTransfer();
-    public NetworkCommProtocolThread netComPortThcREAD = new NetworkCommProtocolThread(moveTransfer,true);
-    public NetworkCommProtocolThread netComPortThrWRITE = new NetworkCommProtocolThread(moveTransfer,false);
+    public NetworkCommProtocolThread netComPortThcREAD = new NetworkCommProtocolThread(moveTransfer, true);
+    public NetworkCommProtocolThread netComPortThrWRITE = new NetworkCommProtocolThread(moveTransfer, false);
 
 
-    public NetworkConnection(Consumer<Serializable> consumer) {
+    public NetworkConnection(Consumer<Serializable> consumer)
+    {
         netComPortThcREAD.setDaemon(true);
     }
 
@@ -27,7 +28,7 @@ public class NetworkConnection
     }
 
 
-    public void startConnection (Socket socket, BlockingQueue<MoveTransfer> blockingQueue)
+    public void startConnection(Socket socket, BlockingQueue<MoveTransfer> blockingQueue)
     {
         netComPortThcREAD.setName("RECEIVE THREAD ACTIVE ");
         netComPortThcREAD.socket = socket;
@@ -43,10 +44,8 @@ public class NetworkConnection
         netComPortThrWRITE.blockingQueue = blockingQueue;
 
         netComPortThrWRITE.start();
-        
-        
-        
-        
+
+
     }
 
     public void sendData(Serializable data)
@@ -63,8 +62,6 @@ public class NetworkConnection
 //    {
 //        return consumer;
 //    }
-
-
 
 
 }

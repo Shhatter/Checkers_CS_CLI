@@ -1,4 +1,5 @@
 package checkers.classes;
+
 import checkers.enums.PawnColor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -26,60 +27,50 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Controller implements Initializable
 {
-// FXML
- public Button connectToServerButton,startGameButton;
- public GridPane checkerBoard;
- public javafx.scene.image.ImageView testImgView;
- public NetworkConnection networkConnection = new NetworkConnection();
- public Socket clientSocket;
- public BlockingQueue<MoveTransfer> blockingQueue = new LinkedBlockingQueue<MoveTransfer>();;
- public TextField portTextField, ipTextField;
- public Text playerMoveLabel;
-
+    // FXML
+    public Button connectToServerButton, startGameButton;
+    public GridPane checkerBoard;
+    public javafx.scene.image.ImageView testImgView;
+    public NetworkConnection networkConnection = new NetworkConnection();
+    public Socket clientSocket;
+    public BlockingQueue<MoveTransfer> blockingQueue = new LinkedBlockingQueue<MoveTransfer>();
+    ;
+    public TextField portTextField, ipTextField;
+    public Text playerMoveLabel;
 
 
     public StackPane
-            field_01	,field_03	,field_05	,field_07
-            ,field_10,	field_12	,field_14	,field_16
-            ,field_21,	field_23	,field_25	,field_27
-            ,field_30,	field_32	,field_34	,field_36
-            ,field_41,	field_43	,field_45	,field_47
-            ,field_50,	field_52	,field_54	,field_56
-            ,field_61,	field_63	,field_65	,field_67
-            ,field_70,	field_72	,field_74	,field_76;
+            field_01, field_03, field_05, field_07, field_10, field_12, field_14, field_16, field_21, field_23, field_25, field_27, field_30, field_32, field_34, field_36, field_41, field_43, field_45, field_47, field_50, field_52, field_54, field_56, field_61, field_63, field_65, field_67, field_70, field_72, field_74, field_76;
     ArrayList<StackPane> paneList = new ArrayList<StackPane>();
 
 // FXML
 
 
     public Image black = new Image("/images/black.jpg");
-    public Image white  = new Image("/images/white.jpg");
+    public Image white = new Image("/images/white.jpg");
     public Image blackKing = new Image("/images/blackKing.png");
     public Image whiteKing = new Image("/images/whiteKing.png/");
     public String playerID;
     public Boolean rightToMove = false;
-    public PawnColor playerPawnColor= PawnColor.NONE;
+    public PawnColor playerPawnColor = PawnColor.NONE;
 
- ArrayList<FieldViewControl> fieldManager = new ArrayList<FieldViewControl>();
- MoveTransfer moveTransferInController = new MoveTransfer();
+    ArrayList<FieldViewControl> fieldManager = new ArrayList<FieldViewControl>();
+    MoveTransfer moveTransferInController = new MoveTransfer();
 
 
-
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL location, ResourceBundle resources)
+    {
 
 
         paneList.addAll(Arrays.asList(
-                field_01	,field_03	,field_05	,field_07
-                ,field_10,	field_12	,field_14	,field_16
-                ,field_21,	field_23	,field_25	,field_27
-                ,field_30,	field_32	,field_34	,field_36
-                ,field_41,	field_43	,field_45	,field_47
-                ,field_50,	field_52	,field_54	,field_56
-                ,field_61,	field_63	,field_65	,field_67
-                ,field_70,	field_72	,field_74	,field_76));
-
-
-
+                field_01, field_03, field_05, field_07
+                , field_10, field_12, field_14, field_16
+                , field_21, field_23, field_25, field_27
+                , field_30, field_32, field_34, field_36
+                , field_41, field_43, field_45, field_47
+                , field_50, field_52, field_54, field_56
+                , field_61, field_63, field_65, field_67
+                , field_70, field_72, field_74, field_76));
 
 
 //        for (int i = 0; i<8;i++)
@@ -109,33 +100,31 @@ public class Controller implements Initializable
 
         int holder = 0;
 
-        for (int i = 0;i<8;i++)
+        for (int i = 0; i < 8; i++)
         {
 
 
-            if(i%2==0)
+            if (i % 2 == 0)
             {
 
-                fieldManager.add(new FieldViewControl(paneList.get(holder),i,1, PawnColor.NONE));
-                fieldManager.add(new FieldViewControl(paneList.get(holder+1),i,3,PawnColor.NONE));
-                fieldManager.add(new FieldViewControl(paneList.get(holder+2),i,5,PawnColor.NONE));
-                fieldManager.add(new FieldViewControl(paneList.get(holder+3),i,7,PawnColor.NONE));
-            }
-            else
+                fieldManager.add(new FieldViewControl(paneList.get(holder), i, 1, PawnColor.NONE));
+                fieldManager.add(new FieldViewControl(paneList.get(holder + 1), i, 3, PawnColor.NONE));
+                fieldManager.add(new FieldViewControl(paneList.get(holder + 2), i, 5, PawnColor.NONE));
+                fieldManager.add(new FieldViewControl(paneList.get(holder + 3), i, 7, PawnColor.NONE));
+            } else
             {
-                fieldManager.add(new FieldViewControl(paneList.get(holder),i,0,PawnColor.NONE));
-                fieldManager.add(new FieldViewControl(paneList.get(holder+1),i,2,PawnColor.NONE));
-                fieldManager.add(new FieldViewControl(paneList.get(holder+2),i,4,PawnColor.NONE));
-                fieldManager.add(new FieldViewControl(paneList.get(holder+3),i,6,PawnColor.NONE));
+                fieldManager.add(new FieldViewControl(paneList.get(holder), i, 0, PawnColor.NONE));
+                fieldManager.add(new FieldViewControl(paneList.get(holder + 1), i, 2, PawnColor.NONE));
+                fieldManager.add(new FieldViewControl(paneList.get(holder + 2), i, 4, PawnColor.NONE));
+                fieldManager.add(new FieldViewControl(paneList.get(holder + 3), i, 6, PawnColor.NONE));
             }
-        holder+=4;
+            holder += 4;
 
         }
 
         testImgView = new javafx.scene.image.ImageView(black);
         testImgView.fitWidthProperty().bind(fieldManager.get(0).getGridField().widthProperty());
         testImgView.fitHeightProperty().bind(fieldManager.get(0).getGridField().heightProperty());
-
 
 
         //region White - Top
@@ -205,19 +194,17 @@ public class Controller implements Initializable
     {
         try
         {
-            clientSocket = new Socket(ipTextField.getText(), Integer.parseInt(portTextField.getText())) ;
-            networkConnection.startConnection(clientSocket,blockingQueue);
-            connectToServerButton.setDisable (true);
+            clientSocket = new Socket(ipTextField.getText(), Integer.parseInt(portTextField.getText()));
+            networkConnection.startConnection(clientSocket, blockingQueue);
+            connectToServerButton.setDisable(true);
             startGameButton.setDisable(false);
 
-        }
-        catch  (NullPointerException e)
+        } catch (NullPointerException e)
         {
             System.out.println("Nothing on the input!/");
 
 
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Connection monitor");
@@ -245,35 +232,33 @@ public class Controller implements Initializable
             e.printStackTrace();
         }
 
-        rightToMove =  moveTransferInController.isRightToMove();
+        rightToMove = moveTransferInController.isRightToMove();
         playerPawnColor = moveTransferInController.getColor();
-        if(playerPawnColor == PawnColor.WHITE)
+        if (playerPawnColor == PawnColor.WHITE)
         {
-            fillTheBoard(PawnColor.BLACK,black,PawnColor.WHITE,white);
-        }
-        else
+            fillTheBoard(PawnColor.BLACK, black, PawnColor.WHITE, white);
+        } else
         {
 
-            fillTheBoard(PawnColor.WHITE,white,PawnColor.BLACK,black);
+            fillTheBoard(PawnColor.WHITE, white, PawnColor.BLACK, black);
 
         }
 
-        if(rightToMove == false)
+        if (rightToMove == false)
         {
             playerMoveLabel.setText("Ruch przeciwnika");
-            for (FieldViewControl x: fieldManager)
+            for (FieldViewControl x : fieldManager)
 
             {
 
-              setupGestreSourceOnEnemyMove(x);
-              setupGestureTargetOnEnemyMove(x);
+                setupGestreSourceOnEnemyMove(x);
+                setupGestureTargetOnEnemyMove(x);
 
             }
 
-        }
-        else
+        } else
         {
-            for (int i = 0 ; i < fieldManager.size();i++)
+            for (int i = 0; i < fieldManager.size(); i++)
             {
 
                 if (fieldManager.get(i).getPawnColor() == playerPawnColor || fieldManager.get(i).getPawnColor() == PawnColor.NONE)
@@ -281,8 +266,7 @@ public class Controller implements Initializable
                     setupGestureSource(fieldManager.get(i));
                     setupGestureTarget(fieldManager.get(i));
 
-                }
-                else
+                } else
                 {
                     setupGestreSourceOnEnemyMove(fieldManager.get(i));
                     setupGestureTargetOnEnemyMove(fieldManager.get(i));
@@ -296,58 +280,57 @@ public class Controller implements Initializable
 
     }
 
-    private void fillTheBoard(PawnColor top,Image imageTop,PawnColor bottom,Image imageBottom)
+    private void fillTheBoard(PawnColor top, Image imageTop, PawnColor bottom, Image imageBottom)
     {
 
 
-        
-        insertImage(imageTop,new ImageView(),0,1,top);
-        insertImage(imageTop,new ImageView(),0,3,top);
-        insertImage(imageTop,new ImageView(),0,5,top);
-        insertImage(imageTop,new ImageView(),0,7,top);
+        insertImage(imageTop, new ImageView(), 0, 1, top);
+        insertImage(imageTop, new ImageView(), 0, 3, top);
+        insertImage(imageTop, new ImageView(), 0, 5, top);
+        insertImage(imageTop, new ImageView(), 0, 7, top);
 
-        insertImage(imageTop,new ImageView(),1,0,top);
-        insertImage(imageTop,new ImageView(),1,2,top);
-        insertImage(imageTop,new ImageView(),1,4,top);
-        insertImage(imageTop,new ImageView(),1,6,top);
+        insertImage(imageTop, new ImageView(), 1, 0, top);
+        insertImage(imageTop, new ImageView(), 1, 2, top);
+        insertImage(imageTop, new ImageView(), 1, 4, top);
+        insertImage(imageTop, new ImageView(), 1, 6, top);
 
-        insertImage(imageTop,new ImageView(),2,1,top);
-        insertImage(imageTop,new ImageView(),2,3,top);
-        insertImage(imageTop,new ImageView(),2,5,top);
-        insertImage(imageTop,new ImageView(),2,7,top);
+        insertImage(imageTop, new ImageView(), 2, 1, top);
+        insertImage(imageTop, new ImageView(), 2, 3, top);
+        insertImage(imageTop, new ImageView(), 2, 5, top);
+        insertImage(imageTop, new ImageView(), 2, 7, top);
 
         //endregion
         //region Black
 
-        insertImage(imageBottom,new ImageView(),5,0,bottom);
-        insertImage(imageBottom,new ImageView(),5,2,bottom);
-        insertImage(imageBottom,new ImageView(),5,4,bottom);
-        insertImage(imageBottom,new ImageView(),5,6,bottom);
+        insertImage(imageBottom, new ImageView(), 5, 0, bottom);
+        insertImage(imageBottom, new ImageView(), 5, 2, bottom);
+        insertImage(imageBottom, new ImageView(), 5, 4, bottom);
+        insertImage(imageBottom, new ImageView(), 5, 6, bottom);
 
-        insertImage(imageBottom,new ImageView(),6,1,bottom);
-        insertImage(imageBottom,new ImageView(),6,3,bottom);
-        insertImage(imageBottom,new ImageView(),6,5,bottom);
-        insertImage(imageBottom,new ImageView(),6,7,bottom);
+        insertImage(imageBottom, new ImageView(), 6, 1, bottom);
+        insertImage(imageBottom, new ImageView(), 6, 3, bottom);
+        insertImage(imageBottom, new ImageView(), 6, 5, bottom);
+        insertImage(imageBottom, new ImageView(), 6, 7, bottom);
 
 
-        insertImage(imageBottom,new ImageView(),7,0,bottom);
-        insertImage(imageBottom,new ImageView(),7,2,bottom);
-        insertImage(imageBottom,new ImageView(),7,4,bottom);
-        insertImage(imageBottom,new ImageView(),7,6,bottom);
+        insertImage(imageBottom, new ImageView(), 7, 0, bottom);
+        insertImage(imageBottom, new ImageView(), 7, 2, bottom);
+        insertImage(imageBottom, new ImageView(), 7, 4, bottom);
+        insertImage(imageBottom, new ImageView(), 7, 6, bottom);
         //endregion
 
         //region blank initial fields
 
-        insertImage(null,new ImageView(),3,0,PawnColor.NONE);
-        insertImage(null,new ImageView(),3,2,PawnColor.NONE);
-        insertImage(null,new ImageView(),3,4,PawnColor.NONE);
-        insertImage(null,new ImageView(),3,6,PawnColor.NONE);
+        insertImage(null, new ImageView(), 3, 0, PawnColor.NONE);
+        insertImage(null, new ImageView(), 3, 2, PawnColor.NONE);
+        insertImage(null, new ImageView(), 3, 4, PawnColor.NONE);
+        insertImage(null, new ImageView(), 3, 6, PawnColor.NONE);
 
 
-        insertImage(null,new ImageView(),4,1,PawnColor.NONE);
-        insertImage(null,new ImageView(),4,3,PawnColor.NONE);
-        insertImage(null,new ImageView(),4,5,PawnColor.NONE);
-        insertImage(null,new ImageView(),4,7,PawnColor.NONE);
+        insertImage(null, new ImageView(), 4, 1, PawnColor.NONE);
+        insertImage(null, new ImageView(), 4, 3, PawnColor.NONE);
+        insertImage(null, new ImageView(), 4, 5, PawnColor.NONE);
+        insertImage(null, new ImageView(), 4, 7, PawnColor.NONE);
 
 
 //        for (FieldViewControl x: fieldManager)
@@ -359,11 +342,11 @@ public class Controller implements Initializable
     }
 
 
-    void insertImage(Image image,ImageView inImageView,int  n,int m,PawnColor pwnColor)
+    void insertImage(Image image, ImageView inImageView, int n, int m, PawnColor pwnColor)
     {
 
 
-        int index = retrunFieldfromFieldManagerList (n,m);
+        int index = retrunFieldfromFieldManagerList(n, m);
 
         inImageView.setImage(image);
         inImageView.setFitHeight(30);
@@ -373,8 +356,6 @@ public class Controller implements Initializable
         fieldManager.get(index).setViewedImage(inImageView);
         fieldManager.get(index).getGridField().getChildren().add(inImageView);
         fieldManager.get(index).setPawnColor(pwnColor);
-
-
 
 
     }
@@ -402,7 +383,6 @@ public class Controller implements Initializable
                 source.getGridField().getChildren().removeAll();
 //               pawnInitialField(source.getN(),source.getM(),source.getPawnColor(),playerID);
                 //moveTransferInController[0].setAllData(source.getN(),source.getM(),source.getPawnColor(),playerID);
-
 
 
                 event.consume();
@@ -439,43 +419,42 @@ public class Controller implements Initializable
     }
 
 
-
-    void setupGestureTarget (final FieldViewControl target)
-{
-
-    target.getGridField().setOnDragOver(new EventHandler<DragEvent>()
+    void setupGestureTarget(final FieldViewControl target)
     {
-        @Override
-        public void handle(DragEvent event)
+
+        target.getGridField().setOnDragOver(new EventHandler<DragEvent>()
         {
-            Dragboard dragBoard = event.getDragboard();
-
-            if (dragBoard.hasImage())
+            @Override
+            public void handle(DragEvent event)
             {
+                Dragboard dragBoard = event.getDragboard();
 
-                event.acceptTransferModes(TransferMode.MOVE);
+                if (dragBoard.hasImage())
+                {
+
+                    event.acceptTransferModes(TransferMode.MOVE);
+                }
+                event.consume();
             }
-            event.consume();
-        }
-    });
+        });
 
 
-    target.getGridField().setOnDragDropped(new EventHandler<DragEvent>()
-    {
-        @Override
-        public void handle(DragEvent event)
+        target.getGridField().setOnDragDropped(new EventHandler<DragEvent>()
         {
-            Dragboard dragBoard = event.getDragboard();
-            if (dragBoard.hasImage() && target.getPawnColor() ==PawnColor.NONE)
+            @Override
+            public void handle(DragEvent event)
             {
+                Dragboard dragBoard = event.getDragboard();
+                if (dragBoard.hasImage() && target.getPawnColor() == PawnColor.NONE)
+                {
 
 //                pawnDestinationField(target.getN(),target.getM(),target.getPawnColor(),playerID);
-                /////moveTransferInController[1].setAllData(target.getN(),target.getM(),target.getPawnColor(),playerID);
+                    /////moveTransferInController[1].setAllData(target.getN(),target.getM(),target.getPawnColor(),playerID);
 
-            target.getViewedImage().setImage(dragBoard.getImage());
-            target.setPawnColor(playerPawnColor);
+                    target.getViewedImage().setImage(dragBoard.getImage());
+                    target.setPawnColor(playerPawnColor);
 
-            target.getGridField().getChildren().removeAll();
+                    target.getGridField().getChildren().removeAll();
 
 
 
@@ -484,18 +463,17 @@ public class Controller implements Initializable
                 target.getGridField().getChildren().add(new ImageView());
                 ;*/
 
-                event.setDropCompleted(true);
-            }
-            else
-            {
-                event.setDropCompleted(false);
-            }
-    event.consume();
+                    event.setDropCompleted(true);
+                } else
+                {
+                    event.setDropCompleted(false);
+                }
+                event.consume();
 
-        }
-    });
+            }
+        });
 
-}
+    }
 
     /*
       Gesture management !!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -511,21 +489,19 @@ public void pawnDestinationField(int n,int m,PawnColor color,String owner)
 }*/
 
 
-int retrunFieldfromFieldManagerList (int n,int m)
-{
+    int retrunFieldfromFieldManagerList(int n, int m)
+    {
 
-        for (int index =0; index<fieldManager.size();index++)
+        for (int index = 0; index < fieldManager.size(); index++)
         {
-            if(fieldManager.get(index).getN() == n &&fieldManager.get(index).getM() == m)
+            if (fieldManager.get(index).getN() == n && fieldManager.get(index).getM() == m)
             {
 
                 return index;
             }
         }
-    return 99999;
-}
-
-
+        return 99999;
+    }
 
 
     void setupGestreSourceOnEnemyMove(final FieldViewControl source)
@@ -548,7 +524,6 @@ int retrunFieldfromFieldManagerList (int n,int m)
                 //source.getGridField().getChildren().removeAll();
 //               pawnInitialField(source.getN(),source.getM(),source.getPawnColor(),playerID);
                 //moveTransferInController[0].setAllData(source.getN(),source.getM(),source.getPawnColor(),playerID);
-
 
 
                 //event.consume();
@@ -586,9 +561,7 @@ int retrunFieldfromFieldManagerList (int n,int m)
     }
 
 
-
-
-    void setupGestureTargetOnEnemyMove (final FieldViewControl target)
+    void setupGestureTargetOnEnemyMove(final FieldViewControl target)
     {
 
         target.getGridField().setOnDragOver(new EventHandler<DragEvent>()
@@ -637,34 +610,12 @@ int retrunFieldfromFieldManagerList (int n,int m)
 //                {
 //                    event.setDropCompleted(false);
 //                }
- //               event.consume();
+                //               event.consume();
 
             }
         });
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
